@@ -89,20 +89,10 @@ FLASH_SIZE ?= 512KB
 
 # The pin assignments below are used when the settings in flash are invalid, they
 # can be changed via the web interface
-# GPIO pin used to reset attached microcontroller, acative low
-MCU_RESET_PIN       ?= 12
-# GPIO pin used with reset to reprogram MCU (ISP=in-system-programming, unused with AVRs), active low
-MCU_ISP_PIN         ?= 13
 # GPIO pin used for "connectivity" LED, active low
 LED_CONN_PIN        ?= 0
 # GPIO pin used for "serial activity" LED, active low
 LED_SERIAL_PIN      ?= 14
-
-# --------------- esp-link modules config options ---------------
-
-# Optional Modules mqtt
-#MODULES ?= mqtt rest syslog
-MODULES ?= rest 
 
 # --------------- esphttpd config options ---------------
 
@@ -207,19 +197,6 @@ TARGET		= httpd
 APPGEN_TOOL	?= gen_appbin.py
 
 CFLAGS=
-
-# set defines for optional modules
-ifneq (,$(findstring mqtt,$(MODULES)))
-	CFLAGS		+= -DMQTT
-endif
-
-ifneq (,$(findstring rest,$(MODULES)))
-	CFLAGS		+= -DREST
-endif
-
-ifneq (,$(findstring syslog,$(MODULES)))
-	CFLAGS		+= -DSYSLOG
-endif
 
 # which modules (subdirectories) of the project to include in compiling
 LIBRARIES_DIR 	= libraries

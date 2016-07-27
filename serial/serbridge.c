@@ -7,12 +7,7 @@
 #include "serbridge.h"
 #include "serled.h"
 #include "config.h"
-#include "cmd.h"
-#ifdef SYSLOG
-#include "syslog.h"
-#else
 #define syslog(X1...)
-#endif
 
 #define SKIP_AT_RESET
 

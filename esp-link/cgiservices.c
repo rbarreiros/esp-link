@@ -3,10 +3,7 @@
 #include "cgi.h"
 #include "config.h"
 #include "sntp.h"
-#include "cgimqtt.h"
-#ifdef SYSLOG
-#include "syslog.h"
-#endif
+
 
 #ifdef CGISERVICES_DBG
 #define DBG(format, ...) do { os_printf(format, ## __VA_ARGS__); } while(0)

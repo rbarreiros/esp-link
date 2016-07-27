@@ -16,7 +16,6 @@
 #include "cgiwifi.h"
 #include "cgipins.h"
 #include "cgitcp.h"
-#include "cgimqtt.h"
 #include "cgiflash.h"
 #include "auth.h"
 #include "espfs.h"
