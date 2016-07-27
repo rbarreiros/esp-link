@@ -18,14 +18,12 @@
 #include "cgitcp.h"
 #include "cgimqtt.h"
 #include "cgiflash.h"
-#include "cgioptiboot.h"
 #include "auth.h"
 #include "espfs.h"
 #include "uart.h"
 #include "serbridge.h"
 #include "status.h"
 #include "serled.h"
-#include "console.h"
 #include "config.h"
 #include "log.h"
 #include "gpio.h"
@@ -67,15 +65,9 @@ HttpdBuiltInUrl builtInUrls[] = {
   { "/flash/next", cgiGetFirmwareNext, NULL },
   { "/flash/upload", cgiUploadFirmware, NULL },
   { "/flash/reboot", cgiRebootFirmware, NULL },
-  { "/pgm/sync", cgiOptibootSync, NULL },
-  { "/pgm/upload", cgiOptibootData, NULL },
   { "/log/text", ajaxLog, NULL },
   { "/log/dbg", ajaxLogDbg, NULL },
   { "/log/reset", cgiReset, NULL },
-  { "/console/reset", ajaxConsoleReset, NULL },
-  { "/console/baud", ajaxConsoleBaud, NULL },
-  { "/console/text", ajaxConsole, NULL },
-  { "/console/send", ajaxConsoleSend, NULL },
   //Enable the line below to protect the WiFi configuration with an username/password combo.
   //    {"/wifi/*", authBasic, myPassFn},
   { "/wifi", cgiRedirect, "/wifi/wifi.html" },
@@ -153,7 +145,7 @@ void user_init(void) {
   // mount the http handlers
   httpdInit(builtInUrls, 80);
   // init the wifi-serial transparent bridge (port 23)
-  serbridgeInit(23, 2323);
+  serbridgeInit(23);
   uart_add_recv_cb(&serbridgeUartCb);
 #ifdef SHOW_HEAP_USE
   os_timer_disarm(&prHeapTimer);

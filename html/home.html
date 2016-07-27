@@ -24,31 +24,12 @@
               <tr><td>Network SSID</td><td id="wifi-ssid"></td></tr>
               <tr><td>WiFi status</td><td id="wifi-status"></td></tr>
               <tr><td>WiFi address</td><td id="wifi-ip"></td></tr>
-              <tr><td>SLIP status</td><td class="system-slip"></td></tr>
-              <tr><td>MQTT status</td><td class="system-mqtt"></td></tr>
               <tr><td>Serial baud</td><td class="system-baud"></td></tr>
             </tbody></table>
           </div>
           <div class="card">
             <h1>Info</h1>
-            <p style="margin-bottom:0;">The JeeLabs esp-link firmware bridges the ESP8266
-            serial port to WiFi and can
-            program microcontrollers over the serial port, in particular Arduinos, AVRs, and
-            NXP's LPC800 and other ARM processors. Typical avrdude command line to
-            program an Arduino:</p>
-            <div class="tt" style="font-size:100%;">
-              /home/arduino/hardware/tools/avrdude&nbsp;\<br>
-              &nbsp;&nbsp;-DV -patmega328p \<br>
-              &nbsp;&nbsp;-Pnet:esp-link.local:23 \<br>
-              &nbsp;&nbsp;-carduino -b115200 \<br>
-              &nbsp;&nbsp;-U flash:w:my_sketch.hex:i\<br>
-              &nbsp;&nbsp;-C /home/arduino/hardware/tools/avrdude.conf
-            </div>
-            <p>where <tt>-Pnet:esp-link.local:23</tt> tells avrdude to connect to port 23 of esp-link.
-            You can substitute the IP address of your esp-link for esp-link.local if necessary.
-            Please refer to
-            <a href="https://github.com/jeelabs/esp-link/blob/master/README.md">the online README</a>
-            for up-to-date help.</p>
+            <p style="margin-bottom:0;">The JeeLabs esp-link firmware bridges the ESP8266</p>
           </div>
         </div>
         <!-- RIGHT COLUMN -->
@@ -59,24 +40,6 @@
             <div id="pin-table" hidden>
               <form action="#" id="pinform" class="pure-form pure-form-aligned form-narrow">
                 <div class="pure-control-group">
-                  <label for="pin-preset">Presets</label>
-                  <select id="pin-preset" class="pure-button">
-                    <option value="" selected disabled></option>
-                  </select>
-                </div>
-                <hr>
-                <div class="pure-control-group">
-                  <label for="pin-reset">Reset</label>
-                  <select id="pin-reset"></select>
-                  <div class="popup">Connect to &#xb5;C reset pin for programming and reset-&#xb5;C function</div>
-                </div>
-                <div class="pure-control-group">
-                  <label for="pin-isp">ISP/Flash</label>
-                  <select id="pin-isp"></select>
-                  <div class="popup">Second signal to program &#xb5;C.
-                    AVR:not used, esp8266:gpio2, ARM:ISP</div>
-                </div>
-                <div class="pure-control-group">
                   <label for="pin-conn">Conn LED</label>
                   <select id="pin-conn"></select>
                   <div class="popup">LED to show WiFi connectivity</div>
@@ -85,16 +48,6 @@
                   <label for="pin-ser">Serial LED</label>
                   <select id="pin-ser"></select>
                   <div class="popup">LED to show serial activity</div>
-                </div>
-                <div class="pure-control-group">
-                  <label for="pin-swap">UART pins</label>
-                  <select id="pin-swap" class="pure-button">
-                    <option value="0">normal</option>
-                    <option value="1">swapped</option>
-                  </select>
-                  <div class="popup">Swap UART0 pins to avoid ROM boot message.<br>Normal is
-                    TX on gpio1/TX0 and RX on gpio3/RX0, swapped is TX on gpio15 and RX on gpio13.
-                  </div>
                 </div>
                 <div class="pure-control-group">
                   <label for="pin-rxpup" class="pure-checkbox">RX pull-up</label>
@@ -143,7 +96,7 @@
 </div>
 
 <script type="text/javascript">
-onLoad(function() {
+  onLoad(function() {
   makeAjaxInput("system", "description");
   makeAjaxInput("system", "name");
   fetchPins();

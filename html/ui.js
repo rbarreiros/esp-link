@@ -392,41 +392,6 @@ function showNotification(text) {
 
 //===== GPIO Pin mux card
 
-var pinPresets = {
-  // array: reset, isp, conn, ser, swap, rxpup
-  "esp-01":       [  0, -1, 2, -1, 0, 1 ],
-  "esp-12":       [ 12, 14, 0,  2, 0, 1 ],
-  "esp-12 swap":  [  1,  3, 0,  2, 1, 1 ],
-  "esp-bridge":   [ 12, 13, 0, 14, 0, 0 ],
-  "wifi-link-12": [  1,  3, 0,  2, 1, 0 ],
-};
-
-function createPresets(sel) {
-  for (var p in pinPresets) {
-    var opt = m('<option value="' + p + '">' + p + '</option>');
-    sel.appendChild(opt);
-  }
-
-  function applyPreset(v) {
-    var pp = pinPresets[v];
-    if (pp === undefined) return pp;
-//    console.log("apply preset:", v, pp);
-    function setPP(k, v) { $("#pin-"+k).value = v; };
-    setPP("reset", pp[0]);
-    setPP("isp",   pp[1]);
-    setPP("conn",  pp[2]);
-    setPP("ser",   pp[3]);
-    setPP("swap",  pp[4]);
-    $("#pin-rxpup").checked = !!pp[5];
-    sel.value = 0;
-  };
-
-  bnd(sel, "change", function(ev) {
-    ev.preventDefault();
-    applyPreset(sel.value);
-  });
-}
-
 function displayPins(resp) {
   function createSelectForPin(name, v) {
     var sel = $("#pin-"+name);
@@ -447,13 +412,9 @@ function displayPins(resp) {
     if (pup !== undefined) hidePopup(pup[0]);
   };
 
-  createSelectForPin("reset", resp["reset"]);
-  createSelectForPin("isp", resp["isp"]);
   createSelectForPin("conn", resp["conn"]);
   createSelectForPin("ser", resp["ser"]);
-  $("#pin-swap").value = resp["swap"];
   $("#pin-rxpup").checked = !!resp["rxpup"];
-  createPresets($("#pin-preset"));
 
   $("#pin-spinner").setAttribute("hidden", "");
   $("#pin-table").removeAttribute("hidden");
@@ -469,7 +430,7 @@ function setPins(ev) {
   ev.preventDefault();
   var url = "/pins";
   var sep = "?";
-  ["reset", "isp", "conn", "ser", "swap"].forEach(function(p) {
+  ["conn", "ser"].forEach(function(p) {
     url += sep + p + "=" + $("#pin-"+p).value;
     sep = "&";
   });

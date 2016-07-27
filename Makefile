@@ -43,7 +43,7 @@
 
 # If CHANGE_TO_STA is set to "yes" the esp-link module will switch to station mode
 # once successfully connected to an access point. Else it will stay in STA+AP mode.
-CHANGE_TO_STA ?= yes
+CHANGE_TO_STA ?= no
 
 # hostname or IP address for wifi flashing
 ESP_HOSTNAME  ?= esp-link
@@ -85,7 +85,7 @@ ESPBAUD		?= 460800
 # --------------- chipset configuration   ---------------
 
 # Pick your flash size: "512KB", "1MB", or "4MB"
-FLASH_SIZE ?= 4MB
+FLASH_SIZE ?= 512KB
 
 # The pin assignments below are used when the settings in flash are invalid, they
 # can be changed via the web interface
@@ -101,7 +101,8 @@ LED_SERIAL_PIN      ?= 14
 # --------------- esp-link modules config options ---------------
 
 # Optional Modules mqtt
-MODULES ?= mqtt rest syslog
+#MODULES ?= mqtt rest syslog
+MODULES ?= rest 
 
 # --------------- esphttpd config options ---------------
 

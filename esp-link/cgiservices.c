@@ -70,8 +70,6 @@ int ICACHE_FLASH_ATTR cgiSystemInfo(HttpdConnData *connData) {
       "\"size\": \"%s\", "
       "\"id\": \"0x%02X 0x%04X\", "
       "\"partition\": \"%s\", "
-      "\"slip\": \"%s\", "
-      "\"mqtt\": \"%s/%s\", "
       "\"baud\": \"%d\", "
       "\"description\": \"%s\""
     " }",
@@ -81,9 +79,6 @@ int ICACHE_FLASH_ATTR cgiSystemInfo(HttpdConnData *connData) {
     flash_maps[system_get_flash_size_map()],
     fid & 0xff, (fid & 0xff00) | ((fid >> 16) & 0xff),
     part_id ? "user2.bin" : "user1.bin",
-    flashConfig.slip_enable ? "enabled" : "disabled",
-    flashConfig.mqtt_enable ? "enabled" : "disabled",
-    mqttState(),
     flashConfig.baud_rate,
     flashConfig.sys_descr
     );
@@ -106,35 +101,21 @@ void ICACHE_FLASH_ATTR cgiServicesSNTPInit() {
 
 int ICACHE_FLASH_ATTR cgiServicesInfo(HttpdConnData *connData) {
   char buff[1024];
-
+  
   if (connData->conn == NULL) return HTTPD_CGI_DONE; // Connection aborted. Clean up.
-
+  
   os_sprintf(buff,
-    "{ "
-#ifdef SYSLOG
-      "\"syslog_host\": \"%s\", "
-      "\"syslog_minheap\": %d, "
-      "\"syslog_filter\": %d, "
-      "\"syslog_showtick\": \"%s\", "
-      "\"syslog_showdate\": \"%s\", "
-#endif
-      "\"timezone_offset\": %d, "
-      "\"sntp_server\": \"%s\", "
-      "\"mdns_enable\": \"%s\", "
-      "\"mdns_servername\": \"%s\""
-    " }",
-#ifdef SYSLOG
-    flashConfig.syslog_host,
-    flashConfig.syslog_minheap,
-    flashConfig.syslog_filter,
-    flashConfig.syslog_showtick ? "enabled" : "disabled",
-    flashConfig.syslog_showdate ? "enabled" : "disabled",
-#endif
-    flashConfig.timezone_offset,
-    flashConfig.sntp_server,
-    flashConfig.mdns_enable ? "enabled" : "disabled",
-    flashConfig.mdns_servername
-    );
+             "{ "
+             "\"timezone_offset\": %d, "
+             "\"sntp_server\": \"%s\", "
+             "\"mdns_enable\": \"%s\", "
+             "\"mdns_servername\": \"%s\""
+             " }",
+             flashConfig.timezone_offset,
+             flashConfig.sntp_server,
+             flashConfig.mdns_enable ? "enabled" : "disabled",
+             flashConfig.mdns_servername
+             );
 
   jsonHeader(connData, 200);
   httpdSend(connData, buff, -1);
@@ -143,25 +124,6 @@ int ICACHE_FLASH_ATTR cgiServicesInfo(HttpdConnData *connData) {
 
 int ICACHE_FLASH_ATTR cgiServicesSet(HttpdConnData *connData) {
   if (connData->conn == NULL) return HTTPD_CGI_DONE; // Connection aborted. Clean up.
-
-  int8_t syslog = 0;
-
-  syslog |= getStringArg(connData, "syslog_host", flashConfig.syslog_host, sizeof(flashConfig.syslog_host));
-  if (syslog < 0) return HTTPD_CGI_DONE;
-  syslog |= getUInt16Arg(connData, "syslog_minheap", &flashConfig.syslog_minheap);
-  if (syslog < 0) return HTTPD_CGI_DONE;
-  syslog |= getUInt8Arg(connData, "syslog_filter", &flashConfig.syslog_filter);
-  if (syslog < 0) return HTTPD_CGI_DONE;
-  syslog |= getBoolArg(connData, "syslog_showtick", &flashConfig.syslog_showtick);
-  if (syslog < 0) return HTTPD_CGI_DONE;
-  syslog |= getBoolArg(connData, "syslog_showdate", &flashConfig.syslog_showdate);
-  if (syslog < 0) return HTTPD_CGI_DONE;
-
-#ifdef SYSLOG
-  if (syslog > 0) {
-    syslog_init(flashConfig.syslog_host);
-  }
-#endif
 
   int8_t sntp = 0;
   sntp |= getInt8Arg(connData, "timezone_offset", &flashConfig.timezone_offset);
